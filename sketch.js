@@ -26,7 +26,32 @@ function modelReady() {
 function draw() {
   background(220);
 
+  drawGreenShapeBetweenLines(); // 先畫綠色區域
   drawKeyLines();
+  drawExtraLines();
+}
+
+function drawGreenShapeBetweenLines() {
+  const extraPoints = [76,77,90,180,85,16,315,404,320,307,306,408,304,303,302,11,72,73,74,184];
+  if (predictions.length > 0) {
+    let keypoints = predictions[0].scaledMesh;
+    fill(0, 255, 0, 180); // 半透明綠色
+    noStroke();
+    beginShape();
+    // 第一組點
+    for (let i = 0; i < points.length; i++) {
+      let idx = points[i];
+      let [x, y] = keypoints[idx];
+      vertex(x, y);
+    }
+    // 第二組點（反向連接）
+    for (let i = extraPoints.length - 1; i >= 0; i--) {
+      let idx = extraPoints[i];
+      let [x, y] = keypoints[idx];
+      vertex(x, y);
+    }
+    endShape(CLOSE);
+  }
 }
 
 function drawKeyLines() {
@@ -42,5 +67,22 @@ function drawKeyLines() {
       vertex(x, y);
     }
     endShape();
+  }
+}
+
+function drawExtraLines() {
+  const extraPoints = [76,77,90,180,85,16,315,404,320,307,306,408,304,303,302,11,72,73,74,184];
+  if (predictions.length > 0) {
+    let keypoints = predictions[0].scaledMesh;
+    stroke(255, 0, 0);
+    strokeWeight(2);
+    noFill();
+    for (let i = 0; i < extraPoints.length - 1; i++) {
+      let idxA = extraPoints[i];
+      let idxB = extraPoints[i + 1];
+      let [x1, y1] = keypoints[idxA];
+      let [x2, y2] = keypoints[idxB];
+      line(x1, y1, x2, y2);
+    }
   }
 }
