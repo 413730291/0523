@@ -12,8 +12,8 @@ function setup() {
   video.size(width, height);
   video.hide();
 
-  // 載入facemesh模型
-  facemesh = ml5.facemesh(video, modelReady);
+  // 載入facemesh模型（新版ml5.js用faceMesh）
+  facemesh = ml5.faceMesh(video, modelReady);
   facemesh.on("predict", results => {
     predictions = results;
   });
